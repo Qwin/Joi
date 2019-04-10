@@ -5,171 +5,269 @@ Hackolade plugin for Joi
 
 <span class="rvts6">For each object in Hackolade, we've defined a set of standard properties that appear in the properties pane.  But it is possible that your company wants to define and track additional properties for models, containers, entities, and attributes.  Hackolade let's you do just that, by leveraging our plugin architecture (used also to integrate our modeling engine with all kinds of NoSQL document databases.)</span>
 
-<span class="rvts6">  
-</span>
-
-## <span class="rvts0"><span class="rvts16">1) Download and enable plugin</span></span>
-
-<span class="rvts6">To enable the custom properties capability, you first need to download a plugin for each database target for which you wish to add properties.  To do so, go to Help > DB Target Plugin Manager</span>
-
-<img src="lib/Plugin-managermenu.png" width="25%" height="25%">
-
-<span class="rvts6">  
-</span>
-
-<span class="rvts6">You may choose which plugin to install on your computer.</span>
-
-<img src="lib/Plugin-manageravailablecustomprops.png" width="50%" height="50%">
-
-<span class="rvts6">  
-</span>
-
-<span class="rvts6">This will result in the plugin appearing in the Installed tab of the plugin manager.</span>
-
-<img src="lib/Plugin-Managerinstalledcustomprops.png" width="50%" height="50%">
-
-<span class="rvts6">  
-</span>
-
-## <span class="rvts0"><span class="rvts16">2) Access plugin configuration files</span></span>
-
-<span class="rvts6">You are now ready to add custom properties via editing of configuration files.  The plugin configurations files can be found by going to Help > Show plugin directory:</span>
-
-<img src="lib/Plugin-Showplugindirectory.png" width="25%" height="25%">
-
-<span class="rvts6">  
-</span>
-
-<span class="rvts6">For each custom properties plugin, you will find the a directory structure similar to this one:</span>
-
-<img src="lib/Plugin-CustomPropdirectorystructure.png" width="25%" height="25%">
-
-<span class="rvts18">Notes:</span><span class="rvts6"></span>
-
-<span class="rvts6">i) do NOT make any changes to the package.json file!  Only the <object>LevelConfig.json files should be edited according to the specifications below.</span>
-
-<span class="rvts6">ii) it is advised to keep a backup of the files before making changes, so you can revert back in case of errors.</span>
-
-<span class="rvts6">iii) it is always necessary to restart the application after having saved changes before you can see these changes relected in the properties pane.</span>
-
-<span class="rvts6">iv) for field-level definitions, since field types have different property lists, it may be necessary to define custom properties for multiple field types.</span>
-
-## <span class="rvts0"><span class="rvts16">3) Levels</span></span>
-
-<span class="rvts6">As a reminder, terminology differs between NoSQL database:</span>
-
-<span class="rvts6">- container means: dbs in MongoDB, region in DynamoDB, bucket in Couchbase, collection in Cosmos DB</span>
-
-<span class="rvts6">- entity means: collection in MongoDB, table in DynamoDB, document kind in Couchbase, and document type in Cosmos DB</span>
-
-<span class="rvts6">- field means: field in MongoDB, Couchbase, and Cosmos DB.  And attribute in DynamoDB</span>
-
-<span class="rvts6">  
-</span>
-
-<span class="rvts6">You need to edit the corresponding <object>LevelConfig.json file to add custom properties.</span>
-
-<span class="rvts6">  
-</span>
-
-## <span class="rvts0"><span class="rvts16">4) Lower tabs</span></span>
-
-<span class="rvts6">For each level, the Hackolade properties pane may have one or more lower tab:</span>
-
-<span class="rvts6">- MongoDB model lower tab:</span>
-
-<img src="lib/MongoDBmodellowertab.png" width="50%" height="50%">
-
-<span class="rvts6">- MongoDB dbs lower tab:</span>
-
-<img src="lib/MongoDBdbslowertab.png" width="50%" height="50%">
-
-<span class="rvts6">- MongoDB collection lower tab:</span>
-
-<img src="lib/MongoDBcollectionlowertab.png" width="50%" height="50%">
-
-<span class="rvts6">- MongoDB field lower tab:</span>
-
-<img src="lib/MongoDBfieldlowertab.png" width="50%" height="50%">
-
-<span class="rvts6">  
-</span>
-
-<span class="rvts6">If the level allows multiple tabs, you need to choose to which lower tab you want to add properties.</span>
-
-<span class="rvts6">  
-</span>
-
-## <span class="rvts0"><span class="rvts16">5) Property types</span></span>
-
-<span class="rvts6">The following controls are possible for user-defined properties:</span>
-
-<img src="lib/Plugin-possiblepropertytypes.png" width="50%" height="50%">
-
-*   <span class="rvts6">simple text: one line of text</span>
-*   <span class="rvts6">text area: popup for multi-line text entry</span>
-*   <span class="rvts6">dropdown selection from a deined list of options</span>
-*   <span class="rvts6">numeric-only field</span>
-*   <span class="rvts6">checkbox: for true/false entry</span>  
-    <span class="rvts6">  
-    </span>
-
-<span class="rvts6">  
-</span>
-
-## <span class="rvts0"><span class="rvts16">6) Property definition</span></span>
-
-<span class="rvts6">Examples are provided in the comments section of each config file.  Here's an overview of the schema:</span>
-
-<img src="lib/Plugin-propertyschema.png" width="50%" height="50%">
-
-<span class="rvts6">Here's another view, consolidated:</span>
-
-<img src="lib/Plugin-custompropsconsolidatedschema.png" width="50%" height="50%">
-
-<span class="rvts6">- propertyName: mandatory, this is the property label that will appear in the Property Pane</span>
-
-<span class="rvts6">- propertyKeyword: mandatory, this is the unique key for the property</span>
-
-<span class="rvts6">- shouldValidate: optional, boolean true/false to define whether to validate the regular expression of the text input [default: false]</span>
-
-<span class="rvts6">- propertyTooltip: optional, in the case of input types textarea and select, it is possible to display a tooltip  defined here</span>
-
-<span class="rvts6">- propertyType: mandatory, this is the control definition, with possible values: text, details, select (i.e. dropdown), checkbox</span>
-
-<span class="rvts6">- options: optional, this is the array of possible checkbox options</span>
-
-<span class="rvts6">- template: optional, this is needed in the case of propertyType = details, to define a popup multi-line text.  Possible value: textarea</span>
-
-<span class="rvts6">- valueType: optional, this is needed in to specify that a property is numberic only.  Possible values: numeric</span>
-
-<span class="rvts6">  
-</span>
-
-## <span class="rvts0"><span class="rvts16">7) Share customization with team members</span></span>
-
-<span class="rvts6">After making, saving and testing your changes, you should share them with everyone on your team to insure consistency. This is a 3-step process:</span>
-
-<span class="rvts6">- return to the plugin directory via Help > Show plugin directory, and zip up the whole plugin directory where you made your changes;</span>
-
-<span class="rvts6">- transfer this zip file to each team member using Hackolade;</span>
-
-<span class="rvts6">- on each team member's computer, start Hackolade, go to Help > DB target plugin manager, then click the button 'Install from zip file', and choose the zip file file.</span>
-
-<span class="rvts6">  
-</span>
-
-<span class="rvts6">For the changes to take effect on each computer, it is required to exit Hackolade and restart it.</span>
-
-<span class="rvts6">  
-</span>
-
-
-
-</div>
-
-</div>
-
-</article>
+<h1>Hackolade Joi Plugin - Generation of Joi models</h1>
+<p>
+  To generate joi models from your hackolade model we first need a couple of
+  things:
+</p>
+<ol>
+  <li>
+    An existing model created with the JSON target of hackolade (<em
+      >Note: Not required if you are building one from scratch</em
+    >)
+  </li>
+  <li>A hackolade pro license (the only one that allows generation of Joi)</li>
+  <li>
+    The Joi plugin for hackolade (now available in hackolade by default, you
+    just need to install it)
+  </li>
+</ol>
+<p>Contents</p>
+<ol>
+  <li>
+    <a>Installation and usage</a>
+    <ol>
+      <li><a>Installation</a></li>
+      <li><a>Plugin features / usage</a></li>
+    </ol>
+  </li>
+  <li><a>Generation with an existing JSON targeted model</a></li>
+  <li><a>Generation through a new model created from scratch</a></li>
+</ol>
+<h1>Installation / usage of the Joi plugin</h1>
+<h2>Installation</h2>
+<h3>Step 1</h3>
+<p>To install the Joi plugin download hackolade first.</p>
+<h3>Step 2</h3>
+<p>
+  Open hackolade and select &quot;New Model&quot; in &quot;Common Tasks&quot;
+  section.
+</p>
+<p>
+  <img
+    height="250"
+    src="lib/image2019-common-tasks.png"
+  />
+</p>
+<h3>Step 3</h3>
+<p>On the bottom you will see &quot;Install plugin for another target&quot;:</p>
+<h3>
+  <img
+    height="250"
+    src="lib/image2019-install-plugin-link.png"
+  />
+</h3>
+<h3>Step 4</h3>
+<p>Next look in the store for the Joi plugin and press on install:</p>
+<p>
+  <img
+    height="150"
+    src="lib/image2019-install-plugin.png"
+  />
+</p>
+<p><br /></p>
+<p>Now you have successfully installed the Joi plugin.</p>
+<h3>Step 5</h3>
+<p>Restart hackolade to make the plugin show when creating a new model.</p>
+<h2>Plugin features / usage</h2>
+<p>Currently the plugin only supports the most simple features of Joi.</p>
+<h3>Joi Types Supported:</h3>
+<p>
+  <img
+    height="250"
+   src="lib/image2019-joi-types.png"
+  />
+</p>
+<p>
+  If we were to create an object with each type we will see the following: (<em
+    >Note: that the object type and array support multiple children because of
+    their nature</em
+  >)
+</p>
+<p style="margin-left: 30.0px;">
+  const schema = Joi.object().keys({<br />myString: Joi.string(),<br />myInt:
+  Joi.number(),<br />myDate: Joi.date(),<br />myBool: Joi.bool(),<br />myObject:
+  Joi.object().keys({}),<br />myArray: Joi.array().items(Joi.string()),<br />myNull:
+  Joi.valid(null).required()<br />});
+</p>
+<h3>Properties</h3>
+<p>The following properties are supported in the property pane:</p>
+<p>
+  <em><strong>Joi.Required() - required (checkbox)</strong></em>
+</p>
+<p>
+  Supported Types: String, int, date, bool, object, array, null (by default is
+  always required)
+</p>
+<p>
+  <em
+    ><strong
+      ><img
+        width="352"
+        src="lib/image2019-required-properties.png"/>
+      </strong></em>
+</p>
+<p>
+  <em><strong>Joi.Optional().allow(null) - optional (checkbox)</strong></em>
+</p>
+<p>Supported Types: String, int, date, bool, object, array</p>
+<p>
+  <img
+    width="314"
+    src="lib/image2019-optional-properties.png"
+  />
+</p>
+<p>
+  <strong
+    ><em
+      >Joi.length(), Joi.max(), Joi.min() - Min Length (Textbox), Max Length
+      (Textbox), Length (Textbox)</em
+    ></strong
+  >
+</p>
+<p>Supported Types: String</p>
+<p>
+  <img
+    width="337"
+    src="lib/image2019-string-properties.png"
+  />
+</p>
+<p><br /></p>
+<p>
+  Support for other Joi generation features will be based on feedback from
+  users.
+</p>
+<p><br /></p>
+<p>
+  <strong
+    >Note: A lot of other properties are in the properties pane, please ignore
+    those for now as those are default properties of hackolade.
+  </strong>
+</p>
+<p>
+  <strong>They will just be ignored by the Json plugin generation. </strong>
+</p>
+<p><br /></p>
+<h2>Generation with an existing JSON targeted model</h2>
+<p>
+  Most likely you want to generate your Joi objects from an existing JSON
+  targeted model. You can do this fairly easily.
+</p>
+<h3>Step 1</h3>
+<p>
+  First open the existing model you have (the hackolade file) in VSCode or
+  Notepad++ (or even notepad). Find the text &quot;appTarget&quot;. You should
+  see the following:
+</p>
+<p>
+  <img
+    height="150"
+    src="lib/image2019-apptarget.png"
+  />
+</p>
+<p>Now change &quot;JSON&quot; to &quot;JOI&quot;.</p>
+<p>
+  This will allow hackolade to open up your model in the Joi context (which has
+  the feature to generate Joi objects)
+</p>
+<h3>Step 2</h3>
+<p>Next step is to open the document in hackolade</p>
+<p>Open hackolade.</p>
+<p>In the &quot;Common Tasks&quot; section select &quot;Open Model&quot;.</p>
+<p>
+  <img
+    height="250"
+    src="lib/image2019-common-tasks.png"
+  />
+</p>
+<p>
+  Now look for the model you just changed and select it to open it in hackolade.
+</p>
+<p>
+  If everything went correctly you should see the model loaded in hackolade.
+</p>
+<h3>Step 3</h3>
+<p>
+  The next step is generating our joi models. Go to Tools → Forward-Engineer →
+  Generate Joi Objects
+</p>
+<p>
+  <img
+    height="150"
+    src="lib/image2019-forward-engineer.png"
+  />
+</p>
+<p>
+  You will notice you will be presented with a screen that allows you to select
+  what you want to generate.
+</p>
+<p>
+  <img
+    height="250"
+    src="lib/image2019-select-models.png"
+  />
+</p>
+<p><br /></p>
+<p>
+  Select what you want to generate Joi objects for and click on submit. Now
+  select the directory and it will generate your Joi objects successfully.
+</p>
+<p>
+  The output will put all the Joi objects in separate folders for you, if you
+  have multiple documents.
+</p>
+<p>
+  <img
+    height="150"
+    src="lib/image2019-folder-structure.png"
+  />
+</p>
+<p>
+  Lastly the Joi objects might need some adjustments as some naming you might
+  have chosen breaks the javascript syntax.
+</p>
+<p>
+  <img
+    height="250"
+    src="lib/image2019-joi-generation.png"
+  />
+</p>
+<h2>Generation through a new model created from scratch</h2>
+<p>
+  Generation through a new model is much easier as you will just need to create
+  a need model and select the target in hackolade to be Joi.
+</p>
+<h3>Step 1</h3>
+<p>
+  Open hackolade and select &quot;New Model&quot; in &quot;Common Tasks&quot;
+  section.
+</p>
+<p>
+  <img
+    height="250"
+    src="lib/image2019-common-tasks.png"
+  />
+</p>
+<h3>Step 2</h3>
+<p>
+  Next select the Joi target type (if it's not there install the plugin as
+  mentioned at the start of this document.)
+</p>
+<p>
+  <img
+    height="250"
+    src="lib/image2019-joi-target.png"
+  />
+</p>
+<p>
+  Now create the model (if you are unfamiliar on how to create a model in
+  hackolade please read the hackolade JSON documentation)
+</p>
+<h3>Step 3</h3>
+<p>
+  Next follow step 3 from the previous section &quot;Generation with an existing
+  JSON targeted model&quot; and go onwards from there.
+</p>
+<p><br /></p>
 
 </div>
