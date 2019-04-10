@@ -39,25 +39,8 @@ Hackolade plugin for Joi
 <h3>Step 1</h3>
 <p>To install the Joi plugin download hackolade first.</p>
 <h3>Step 2</h3>
-<p>
-  Open hackolade and select &quot;New Model&quot; in &quot;Common Tasks&quot;
-  section.
-</p>
-<p>
-  <img
-    height="250"
-    src="lib/image2019-common-tasks.png"
-  />
-</p>
+<p>Open hackolade and go to Help > DB target plugin manager (or "Plugin Manager" depending on hackolade version):</p>
 <h3>Step 3</h3>
-<p>On the bottom you will see &quot;Install plugin for another target&quot;:</p>
-<h3>
-  <img
-    height="250"
-    src="lib/image2019-install-plugin-link.png"
-  />
-</h3>
-<h3>Step 4</h3>
 <p>Next look in the store for the Joi plugin and press on install:</p>
 <p>
   <img
@@ -67,7 +50,7 @@ Hackolade plugin for Joi
 </p>
 <p><br /></p>
 <p>Now you have successfully installed the Joi plugin.</p>
-<h3>Step 5</h3>
+<h3>Step 4</h3>
 <p>Restart hackolade to make the plugin show when creating a new model.</p>
 <h2>Plugin features / usage</h2>
 <p>Currently the plugin only supports the most simple features of Joi.</p>
@@ -224,7 +207,8 @@ Hackolade plugin for Joi
 </p>
 <p>
   Lastly the Joi objects might need some adjustments as some naming you might
-  have chosen breaks the javascript syntax.
+  have chosen for your objects in hackolade breaks the javascript syntax. 
+  e.g. if you named an object "New Field" for instance, spaces aren't allowed on properties in javascript / typescript.
 </p>
 <p>
   <img
