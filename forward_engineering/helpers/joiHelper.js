@@ -1,67 +1,60 @@
-const ts = require('typescript');
+const { factory, NodeFlags } = require('typescript');
 
 function generateObjectProperty(propList) {
-	let valueExpression = ts.createCall(
-		ts.createPropertyAccess(
-			ts.createCall(
-				ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('object')),
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(
+			factory.createCallExpression(
+				factory.createPropertyAccessExpression(
+					factory.createIdentifier('Joi'),
+					factory.createIdentifier('object'),
+				),
 				undefined,
 				[],
 			),
-			ts.createIdentifier('keys'),
+			factory.createIdentifier('keys'),
 		),
 		undefined,
-		[ts.createObjectLiteral(propList, true)],
+		[factory.createObjectLiteral(propList, true)],
 	);
-
-	return valueExpression;
 }
 
 function generateDateProperty() {
-	let valueExpression = ts.createCall(
-		ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('date')),
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('date')),
 		undefined,
 		[],
 	);
-
-	return valueExpression;
 }
 
 function generateBoolProperty() {
-	let valueExpression = ts.createCall(
-		ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('bool')),
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('bool')),
 		undefined,
 		[],
 	);
-
-	return valueExpression;
 }
 
 function generateStringProperty() {
-	let valueExpression = ts.createCall(
-		ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('string')),
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('string')),
 		undefined,
 		[],
 	);
-
-	return valueExpression;
 }
 
 function generateNumberProperty() {
-	let valueExpression = ts.createCall(
-		ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('number')),
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('number')),
 		undefined,
 		[],
 	);
-
-	return valueExpression;
 }
 
 function generateNullProperty() {
-	let valueExpression = ts.createCall(
-		ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('valid')),
+	let valueExpression = factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('valid')),
 		undefined,
-		[ts.createNull()],
+		[factory.createNull()],
 	);
 
 	valueExpression = required(valueExpression);
@@ -70,53 +63,70 @@ function generateNullProperty() {
 }
 
 function generateArrayProperty(propList) {
-	let valueExpression = ts.createCall(
-		ts.createPropertyAccess(
-			ts.createCall(
-				ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('array')),
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(
+			factory.createCallExpression(
+				factory.createPropertyAccessExpression(
+					factory.createIdentifier('Joi'),
+					factory.createIdentifier('array'),
+				),
 				undefined,
 				[],
 			),
-			ts.createIdentifier('items'),
+			factory.createIdentifier('items'),
 		),
 		undefined,
 		propList,
 	);
-
-	return valueExpression;
 }
 
 //wrap required
 function required(expression) {
-	return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('required')), undefined, []);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('required')),
+		undefined,
+		[],
+	);
 }
 
 function optional(expression) {
-	return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('optional')), undefined, []);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('optional')),
+		undefined,
+		[],
+	);
 }
 
 function allowNull(expression) {
-	return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('allow')), undefined, [
-		ts.createNull(),
-	]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('allow')),
+		undefined,
+		[factory.createNull()],
+	);
 }
 
 function stringMinLength(expression, minLength) {
-	return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('min')), undefined, [
-		ts.createNumericLiteral(minLength.toString()),
-	]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('min')),
+		undefined,
+		[factory.createNumericLiteral(minLength.toString())],
+	);
 }
 
 function stringMaxLength(expression, maxLength) {
-	return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('max')), undefined, [
-		ts.createNumericLiteral(maxLength.toString()),
-	]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('max')),
+		undefined,
+		[factory.createNumericLiteral(maxLength.toString())],
+	);
 }
 
 function stringLength(expression, length) {
-	return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('length')), undefined, [
-		ts.createNumericLiteral(length.toString()),
-	]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('length')),
+		undefined,
+		[factory.createNumericLiteral(length.toString())],
+	);
 }
 
 function generateExpression(value, modelDefinitions) {
@@ -169,7 +179,7 @@ function generateExpression(value, modelDefinitions) {
 }
 
 function generateJoiTypes(jsonSchema, modelDefinitions) {
-	let propList = [];
+	const propList = [];
 
 	//this is needed because the json structure changes when
 	//1 item is only in the array (it becomes just an object)
@@ -207,7 +217,7 @@ function generateJoiTypes(jsonSchema, modelDefinitions) {
 			}
 		}
 
-		propList.push(ts.createPropertyAssignment(ts.createIdentifier(key), expression));
+		propList.push(factory.createPropertyAssignment(factory.createIdentifier(key), expression));
 	}
 
 	return propList;
@@ -217,28 +227,31 @@ const generateJoiObjects = (jsonSchema, modelDefinitions) => {
 	const propList = generateJoiTypes(jsonSchema, modelDefinitions);
 
 	//loop and add all props
-	return ts.createVariableStatement(
+	return factory.createVariableStatement(
 		undefined,
-		ts.createVariableDeclarationList(
+		factory.createVariableDeclarationList(
 			[
-				ts.createVariableDeclaration(
-					ts.createIdentifier('schema'),
+				factory.createVariableDeclaration(
+					factory.createIdentifier('schema'),
 					undefined,
-					ts.createCall(
-						ts.createPropertyAccess(
-							ts.createCall(
-								ts.createPropertyAccess(ts.createIdentifier('Joi'), ts.createIdentifier('object')),
+					factory.createCallExpression(
+						factory.createPropertyAccessExpression(
+							factory.createCallExpression(
+								factory.createPropertyAccessExpression(
+									factory.createIdentifier('Joi'),
+									factory.createIdentifier('object'),
+								),
 								undefined,
 								[],
 							),
-							ts.createIdentifier('keys'),
+							factory.createIdentifier('keys'),
 						),
 						undefined,
-						[ts.createObjectLiteral(propList, true)],
+						[factory.createObjectLiteralExpression(propList, true)],
 					),
 				),
 			],
-			ts.NodeFlags.Const,
+			NodeFlags.Const,
 		),
 	);
 };
