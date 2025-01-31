@@ -1,5 +1,5 @@
 {
-    "WELCOME_PAGE___REVERSE_ENGINEER_DESCRIPTION": "Create a Hackolade model from an existing Joi object",
+	"WELCOME_PAGE___REVERSE_ENGINEER_DESCRIPTION": "Create a Hackolade model from an existing Joi object",
 	"MAIN_MENU___ADD_BUCKET": "Add Group",
 	"MAIN_MENU___ADD_COLLECTION": "Add Document",
 	"MAIN_MENU___ADD_RELATIONSHIP": "Add Relationship",

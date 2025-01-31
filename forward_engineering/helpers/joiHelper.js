@@ -1,293 +1,261 @@
-const ts = require("typescript");
+const { factory, NodeFlags } = require('typescript');
 
 function generateObjectProperty(propList) {
-    let valueExpression = ts.createCall(
-        ts.createPropertyAccess(
-            ts.createCall(
-                ts.createPropertyAccess(
-                    ts.createIdentifier('Joi'),
-                    ts.createIdentifier('object')
-                ),
-                undefined,
-                []
-            ),
-            ts.createIdentifier('keys')
-        ),
-        undefined,
-        [
-            ts.createObjectLiteral(
-                propList,
-                true
-            )
-        ]
-    );
-
-    return valueExpression;
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(
+			factory.createCallExpression(
+				factory.createPropertyAccessExpression(
+					factory.createIdentifier('Joi'),
+					factory.createIdentifier('object'),
+				),
+				undefined,
+				[],
+			),
+			factory.createIdentifier('keys'),
+		),
+		undefined,
+		[factory.createObjectLiteral(propList, true)],
+	);
 }
 
 function generateDateProperty() {
-    let valueExpression = ts.createCall(
-        ts.createPropertyAccess(
-            ts.createIdentifier('Joi'),
-            ts.createIdentifier('date')
-        ),
-        undefined,
-        []
-    );
-
-    return valueExpression;
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('date')),
+		undefined,
+		[],
+	);
 }
 
 function generateBoolProperty() {
-    let valueExpression = ts.createCall(
-        ts.createPropertyAccess(
-            ts.createIdentifier('Joi'),
-            ts.createIdentifier('bool')
-        ),
-        undefined,
-        []
-    );
-
-    return valueExpression;
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('bool')),
+		undefined,
+		[],
+	);
 }
 
 function generateStringProperty() {
-    let valueExpression = ts.createCall(
-        ts.createPropertyAccess(
-            ts.createIdentifier('Joi'),
-            ts.createIdentifier('string')
-        ),
-        undefined,
-        []
-    );
-
-    return valueExpression;
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('string')),
+		undefined,
+		[],
+	);
 }
 
 function generateNumberProperty() {
-    let valueExpression = ts.createCall(
-        ts.createPropertyAccess(
-            ts.createIdentifier('Joi'),
-            ts.createIdentifier('number')
-        ),
-        undefined,
-        []
-    );
-
-    return valueExpression;
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('number')),
+		undefined,
+		[],
+	);
 }
 
 function generateNullProperty() {
-    let valueExpression = ts.createCall(
-        ts.createPropertyAccess(
-            ts.createIdentifier('Joi'),
-            ts.createIdentifier('valid')
-        ),
-        undefined,
-        [ts.createNull()]
-    );
+	let valueExpression = factory.createCallExpression(
+		factory.createPropertyAccessExpression(factory.createIdentifier('Joi'), factory.createIdentifier('valid')),
+		undefined,
+		[factory.createNull()],
+	);
 
-    valueExpression = required(valueExpression);
+	valueExpression = required(valueExpression);
 
-    return valueExpression;
+	return valueExpression;
 }
 
 function generateArrayProperty(propList) {
-    let valueExpression =
-        ts.createCall(
-            ts.createPropertyAccess(
-                ts.createCall(
-                    ts.createPropertyAccess(
-                        ts.createIdentifier('Joi'),
-                        ts.createIdentifier('array')
-                    ),
-                    undefined,
-                    []
-                ),
-                ts.createIdentifier('items')
-            ),
-            undefined,
-            propList
-        );
-
-    return valueExpression;
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(
+			factory.createCallExpression(
+				factory.createPropertyAccessExpression(
+					factory.createIdentifier('Joi'),
+					factory.createIdentifier('array'),
+				),
+				undefined,
+				[],
+			),
+			factory.createIdentifier('items'),
+		),
+		undefined,
+		propList,
+	);
 }
 
 //wrap required
 function required(expression) {
-    return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('required')), undefined, []);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('required')),
+		undefined,
+		[],
+	);
 }
 
 function optional(expression) {
-    return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('optional')), undefined, []);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('optional')),
+		undefined,
+		[],
+	);
 }
 
 function allowNull(expression) {
-    return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('allow')), undefined, [ts.createNull()]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('allow')),
+		undefined,
+		[factory.createNull()],
+	);
 }
 
 function stringMinLength(expression, minLength) {
-    return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('min')), undefined, [ts.createNumericLiteral(minLength.toString())]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('min')),
+		undefined,
+		[factory.createNumericLiteral(minLength.toString())],
+	);
 }
 
 function stringMaxLength(expression, maxLength) {
-    return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('max')), undefined, [ts.createNumericLiteral(maxLength.toString())]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('max')),
+		undefined,
+		[factory.createNumericLiteral(maxLength.toString())],
+	);
 }
 
 function stringLength(expression, length) {
-    return ts.createCall(ts.createPropertyAccess(expression, ts.createIdentifier('length')), undefined, [ts.createNumericLiteral(length.toString())]);
+	return factory.createCallExpression(
+		factory.createPropertyAccessExpression(expression, factory.createIdentifier('length')),
+		undefined,
+		[factory.createNumericLiteral(length.toString())],
+	);
 }
 
-
-
 function generateExpression(value, modelDefinitions) {
-    var expression;
+	let expression, type;
 
-    // if its a reference type
-    if (value['$ref']) {
-        let model = value['$ref'].replace("#model/definitions/", "");
-        let modelValue = modelDefinitions.properties[model];
-        return generateExpression(modelValue, modelDefinitions);
-    }
+	// if its a reference type
+	if (value['$ref']) {
+		let model = value['$ref'].replace('#model/definitions/', '');
+		let modelValue = modelDefinitions.properties[model];
+		return generateExpression(modelValue, modelDefinitions);
+	}
 
-    //multi type
-    if(value.type instanceof Array && value.type.length > 0){
-        type = value.type[0];
-    }else{
-        type = value.type;
-    }
+	//multi type
+	if (value.type instanceof Array && value.type.length > 0) {
+		type = value.type[0];
+	} else {
+		type = value.type;
+	}
 
-    if (type === "string") {
-        expression = generateStringProperty();
-        if (value.length) {
-            expression = stringLength(expression, value.length);
-        }
-        if (value.minLength) {
-            expression = stringMinLength(expression, value.minLength);
-        }
-        if (value.maxLength) {
-            expression = stringMaxLength(expression, value.maxLength);
-        }
-    }
-    else if (type === "numeric" || type === "number") {
-        expression = generateNumberProperty();
-    }
-    else if (type === "bool" || type === "boolean") {
-        expression = generateBoolProperty();
-    }
-    else if (type === "date") {
-        expression = generateDateProperty();
-    }
-    else if (type === "object" || type === "document") {
-        expression = generateObjectProperty(generateJoiTypes(value, modelDefinitions));
-    }
-    else if (type === "array") {
-        expression = generateArrayProperty(generateJoiTypes(value, modelDefinitions));
-    } else if (type === "null") {
-        expression = generateNullProperty();
-    }
+	if (type === 'string') {
+		expression = generateStringProperty();
+		if (value.length) {
+			expression = stringLength(expression, value.length);
+		}
+		if (value.minLength) {
+			expression = stringMinLength(expression, value.minLength);
+		}
+		if (value.maxLength) {
+			expression = stringMaxLength(expression, value.maxLength);
+		}
+	} else if (type === 'numeric' || type === 'number') {
+		expression = generateNumberProperty();
+	} else if (type === 'bool' || type === 'boolean') {
+		expression = generateBoolProperty();
+	} else if (type === 'date') {
+		expression = generateDateProperty();
+	} else if (type === 'object' || type === 'document') {
+		expression = generateObjectProperty(generateJoiTypes(value, modelDefinitions));
+	} else if (type === 'array') {
+		expression = generateArrayProperty(generateJoiTypes(value, modelDefinitions));
+	} else if (type === 'null') {
+		expression = generateNullProperty();
+	}
 
-    if (value.optional) {
-        expression = optional(allowNull(expression));
-    }
+	if (value.optional) {
+		expression = optional(allowNull(expression));
+	}
 
-
-    return expression;
+	return expression;
 }
 
 function generateJoiTypes(jsonSchema, modelDefinitions) {
-    var propList = [];
+	const propList = [];
 
-    //this is needed because the json structure changes when 
-    //1 item is only in the array (it becomes just an object)
-    let itemsArray = [];
-    if (jsonSchema.items) {
-        itemsArray = jsonSchema.items instanceof Array ? jsonSchema.items : [jsonSchema.items];
-    }
-    // if array
-    for (var index in itemsArray) {
-        var value = itemsArray[index];
+	//this is needed because the json structure changes when
+	//1 item is only in the array (it becomes just an object)
+	let itemsArray = [];
+	if (jsonSchema.items) {
+		itemsArray = jsonSchema.items instanceof Array ? jsonSchema.items : [jsonSchema.items];
+	}
+	// if array
+	for (const index in itemsArray) {
+		const value = itemsArray[index];
 
-        let expression = generateExpression(value, modelDefinitions);
+		let expression = generateExpression(value, modelDefinitions);
 
-        //check for required is set to true
-        if (jsonSchema.required) {
-            var list = jsonSchema.required;
-            if (list.includes(key)) {
-                expression = required(expression);
-            }
-        }
+		//check for required is set to true
+		if (jsonSchema.required) {
+			const list = jsonSchema.required;
+			if (list.includes(index)) {
+				expression = required(expression);
+			}
+		}
 
-        propList.push(expression);
-    }
+		propList.push(expression);
+	}
 
-    // if object
-    for (var key in jsonSchema.properties) {
-        let value = jsonSchema.properties[key];
+	// if object
+	for (const key in jsonSchema.properties) {
+		let value = jsonSchema.properties[key];
 
-        let expression = generateExpression(value, modelDefinitions);
-        /*
-                if (!expression) {
-                    throw Error(JSON.stringify(value) + JSON.stringify(expression));
-                }
-        */
-        //check for required is set to true
-        if (jsonSchema.required) {
-            let list = jsonSchema.required;
-            if (list.includes(key)) {
-                expression = required(expression);
-            }
-        }
+		let expression = generateExpression(value, modelDefinitions);
+		//check for required is set to true
+		if (jsonSchema.required) {
+			let list = jsonSchema.required;
+			if (list.includes(key)) {
+				expression = required(expression);
+			}
+		}
 
-        propList.push(ts.createPropertyAssignment(
-            ts.createIdentifier(key),
-            expression
-        ));
+		propList.push(factory.createPropertyAssignment(factory.createIdentifier(key), expression));
+	}
 
-    }
-
-    return propList;
+	return propList;
 }
 
 const generateJoiObjects = (jsonSchema, modelDefinitions) => {
+	const propList = generateJoiTypes(jsonSchema, modelDefinitions);
 
-    var propList = generateJoiTypes(jsonSchema, modelDefinitions);
-
-    //loop and add all props
-    return ts.createVariableStatement(
-        undefined,
-        ts.createVariableDeclarationList(
-            [
-                ts.createVariableDeclaration(
-                    ts.createIdentifier('schema'),
-                    undefined,
-                    ts.createCall(
-                        ts.createPropertyAccess(
-                            ts.createCall(
-                                ts.createPropertyAccess(
-                                    ts.createIdentifier('Joi'),
-                                    ts.createIdentifier('object')
-                                ),
-                                undefined,
-                                []
-                            ),
-                            ts.createIdentifier('keys')
-                        ),
-                        undefined,
-                        [
-                            ts.createObjectLiteral(
-                                propList,
-                                true
-                            )
-                        ]
-                    )
-                )
-            ],
-            ts.NodeFlags.Const
-        )
-    )
-}
+	//loop and add all props
+	return factory.createVariableStatement(
+		undefined,
+		factory.createVariableDeclarationList(
+			[
+				factory.createVariableDeclaration(
+					factory.createIdentifier('schema'),
+					undefined,
+					factory.createCallExpression(
+						factory.createPropertyAccessExpression(
+							factory.createCallExpression(
+								factory.createPropertyAccessExpression(
+									factory.createIdentifier('Joi'),
+									factory.createIdentifier('object'),
+								),
+								undefined,
+								[],
+							),
+							factory.createIdentifier('keys'),
+						),
+						undefined,
+						[factory.createObjectLiteralExpression(propList, true)],
+					),
+				),
+			],
+			NodeFlags.Const,
+		),
+	);
+};
 
 module.exports = {
-    generateJoiObjects
+	generateJoiObjects,
 };
